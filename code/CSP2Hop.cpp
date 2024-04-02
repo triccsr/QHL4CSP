@@ -5,7 +5,7 @@ typedef pair<double, double> DD;
 typedef pair<int, vector<DD>> IV;
 typedef pair<int, vector<int>> IVI;
 typedef pair<int, int> II;
-const int MAX_V = 435676;
+const int MAX_V = 9e5;
 int N, rootpa;
 long long npc, nhoplink;
 double optw = DBL_MAX;

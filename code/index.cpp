@@ -7,7 +7,7 @@ typedef pair<int, vector<DD>> IV;
 typedef pair<int, vector<int>> IVI;
 typedef pair<int, int> II;
 typedef pair<int, double> ID;
-const int MAX_V = 435676;
+const int MAX_V = 9e5;
 int N, M;//# of vertices and edges
 long long csp2hoptc, qhltc;//# of path concatenations
 double optw = DBL_MAX;//optimal answer
@@ -115,8 +115,8 @@ void treedec(){
     //building the tree decomposition first build nodes and then link them 
     for (int i = 0; i < N; i++){
         int v = ordergen[i];
-        if(i%100000==0)
-            printf("%d\n", i);
+        if(i%1000==0)
+            cerr<<i<<endl;
         unordered_map<int, vector<DD>>::iterator it;  
         for (it = adj[v].begin(); it !=adj[v].end(); it++)
             T[v].X.push_back(IV(it->first, it->second));
@@ -171,6 +171,8 @@ void treedec(){
         descnt[T[v].parent] += descnt[v];
     }
     cout << "Tree Width " << treewidth << endl;
+    cerr << "Tree Width " << treewidth << endl;
+
 }
 
 void concat(vector<DD> &P1,vector<DD> &P2, vector<DD> &res){
@@ -239,8 +241,11 @@ void labeling(){
         for (int i = 0; i < T[v].children.size();i++){
             bfs.push(T[v].children[i]);
         }
-        if(iter%100000==0)
-            printf("%d %d\n", iter, treeheight);
+        if(iter%1000==0) {
+            //printf("%d %d\n", iter, treeheight);
+            cerr << iter << " " << treeheight << endl;
+            //cout<<iter<<" "<<treeheight<<endl;
+        }
         iter += 1;
     }
 }
@@ -368,8 +373,10 @@ void QHLindex(string prefix){//building all pruning conditions Sec. 4.2
     uniform_int_distribution<int> st(0, N - 1);
     while (~fscanf(fpq, "%d%d%lf", &s, &t, &C)){
         iter += 1;
-        if(iter%10000==0)
-            printf("%d\n", iter);
+        if(iter%10000==0) {
+            //printf("%d\n", iter);
+            cerr<<iter<<endl;
+        }
         vector<int> ancs,anct;
         int u1 = s, l = -1;
         while(u1!=MAX_V){
@@ -601,6 +608,9 @@ struct edge{
 vector<edge> alledges;
 
 int main(int argc , char * argv[]){
+
+
+
     string s, sq;
     FILE *fp_query, *fp_networkw, *fp_networkc;
     if (argc > 1)
@@ -625,6 +635,12 @@ int main(int argc , char * argv[]){
     for (int i = 0; i < 4; i++)
         fgetc(fp_networkw);
     fscanf(fp_networkw, "%d%d", &N, &M);
+
+    freopen((prefix + string("Results")).c_str(), "w", stdout);
+
+    cout<<N<<" nodes, "<<M<<"arcs"<<endl;
+    cerr<<N<<" nodes, "<<M<<"arcs"<<endl;
+
     for (int i = 0; i < 3; i++)
         fgets(buffer, 90, fp_networkw);
     //distance
@@ -644,6 +660,7 @@ int main(int argc , char * argv[]){
         v--;        
         //printf("%d %d\n", u, v);
         if(i%2==0){
+            //cout<<"read edge:"<<u<<" "<<v<<" "<<c<<" "<<w<<endl;
             adjo[u][v]=1;
             adjo[v][u]=1;
             alledges.push_back(edge(u, v, c, w));
@@ -655,7 +672,7 @@ int main(int argc , char * argv[]){
 	double runT;
     t1=std::chrono::high_resolution_clock::now();
     string ordername = string("../data/") + s + string("/") + string("order.txt");
-    //genorder(ordername);
+    genorder(ordername);
     ordergen.assign(N, -1);
     FILE *fpord = fopen(ordername.c_str(), "r");
     for (int i = 0; i < N; i++){
@@ -666,6 +683,7 @@ int main(int argc , char * argv[]){
     time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
 	runT= time_span.count();
 	cout<<"Order Generation Time "<<runT<<endl;
+    cerr<<"Order Generation Time "<<runT<<endl;
     
     //distribute edges
     for (int i = 0; i < alledges.size();i++){
@@ -682,6 +700,7 @@ int main(int argc , char * argv[]){
     time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
 	runT= time_span.count();
 	cout<<"Tree Decomposition Time "<<runT<<endl;
+    cerr<<"Tree Decomposition Time "<<runT<<endl;
     //return 0;
 
     t1=std::chrono::high_resolution_clock::now();
@@ -692,6 +711,9 @@ int main(int argc , char * argv[]){
 	cout<<"Labeling Time "<<runT<<endl;
     cout<<"Tree Height "<<treeheight<<endl;
     cout<<"Tree Avg. Height "<<(double)treeavgheight/N<<endl;
+    cerr<<"Labeling Time "<<runT<<endl;
+    cerr<<"Tree Height "<<treeheight<<endl;
+    cerr<<"Tree Avg. Height "<<(double)treeavgheight/N<<endl;
 
     t1=std::chrono::high_resolution_clock::now();
     QHLindex(prefix);
@@ -700,17 +722,23 @@ int main(int argc , char * argv[]){
 	runT= time_span.count();
 	cout<<"QHL Index Time "<<runT<<endl;
     cout << "QHL Index Size " << (double)qhlindexsize * 8 / 1000000 << "MB" << endl;
+    cerr<<"QHL Index Time "<<runT<<endl;
+    cerr << "QHL Index Size " << (double)qhlindexsize * 8 / 1000000 << "MB" << endl;
 
     
     t1=std::chrono::high_resolution_clock::now();
-    //FILE *fp = fopen("index", "w");
-    //save(string("../data/")+s+string("/"));//test without save
+    FILE *fp = fopen("index", "w");
+    save(string("../data/")+s+string("/"));//test without save
     t2=std::chrono::high_resolution_clock::now();
     time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
 	runT= time_span.count();
-	//cout<<"Saving Time "<<runT<<endl;
+	cout<<"Saving Time "<<runT<<endl;
     cout << "Index Size " << (double)indexsize * 4 / 1000000 << "MB" << endl;
-    freopen((prefix + string("Results")).c_str(), "w", stdout);
+    cerr<<"Saving Time "<<runT<<endl;
+    cerr << "Index Size " << (double)indexsize * 4 / 1000000 << "MB" << endl;
+
+    //freopen((prefix + string("Results")).c_str(), "w", stdout);
+
     for (int i = 0; i < 5;i++){
         totvisitpcs = hitpc = qhlhopsize = csp2hopsize = qhltc = csp2hoptc = 0;
         string s3 = string("../data/") + s + string("/") + string("q") + to_string(i+1);

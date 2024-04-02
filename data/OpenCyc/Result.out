@@ -1,0 +1,21 @@
+Finish reading HL file, HL reading time 1702ms
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/q1:
+2400queries, total time 6331us, avg 2.63792us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/q2:
+17172queries, total time 34463us, avg 2.00693us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/q3:
+48293queries, total time 106933us, avg 2.21425us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/q4:
+30358queries, total time 77455us, avg 2.55139us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/q5:
+1577queries, total time 4606us, avg 2.92074us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/r1:
+48293queries, total time 86921us, avg 1.79987us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/r2:
+48293queries, total time 104434us, avg 2.16251us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/r3:
+48293queries, total time 109103us, avg 2.25919us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/r4:
+48293queries, total time 102466us, avg 2.12176us
+Query at /home/srChen/Documents/skyHL/Resources/OpenCyc/r5:
+48293queries, total time 95765us, avg 1.983us
