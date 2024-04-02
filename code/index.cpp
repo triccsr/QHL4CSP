@@ -737,11 +737,12 @@ int main(int argc , char * argv[]){
     cerr<<"Saving Time "<<runT<<endl;
     cerr << "Index Size " << (double)indexsize * 4 / 1000000 << "MB" << endl;
 
-    //freopen((prefix + string("Results")).c_str(), "w", stdout);
-
-    for (int i = 0; i < 5;i++){
+    freopen((prefix + string("Results")).c_str(), "w", stdout);
+    double cspTotalTime=0.0,qhlTotalTime=0.0;
+    size_t totalQCount=0;
+    for (int i = 0; i <= 5;i++){
         totvisitpcs = hitpc = qhlhopsize = csp2hopsize = qhltc = csp2hoptc = 0;
-        string s3 = string("../data/") + s + string("/") + string("q") + to_string(i+1);
+        string s3 = string("../data/") + s + string("/") + string("q") + to_string(i);
         fp_query = fopen(s3.c_str(), "r");
         vector<pair<II, double>> queryset;
         int qs, qt;
@@ -749,19 +750,21 @@ int main(int argc , char * argv[]){
         while (~fscanf(fp_query, "%d%d%lf", &qs, &qt, &qC)){
             queryset.push_back(make_pair(II(qs, qt), qC));
         }
-        FILE *fp_ans1 = fopen((s3+string("CSP2Hopans")).c_str(), "w");
-        t1=std::chrono::high_resolution_clock::now();
-        for(int i=0;i<queryset.size();i++){
-            CSP2Hop(queryset[i].first.first, queryset[i].first.second, queryset[i].second);
-            fprintf(fp_ans1, "%f\n", optw);
-        }
-        fclose(fp_ans1);
-        t2=std::chrono::high_resolution_clock::now();
-        time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
-        runT= time_span.count();
-        cout<<"CSP-2Hop Query Time "<<runT<<endl;
-        cout << "# of CSP-2Hop Hoplinks " << csp2hopsize <<endl;
-        cout << "# of CSP-2Hop Path Concatenations " << csp2hoptc <<endl;
+        totalQCount+=queryset.size();
+        // FILE *fp_ans1 = fopen((s3+string("CSP2Hopans")).c_str(), "w");
+        // t1=std::chrono::high_resolution_clock::now();
+        // for(int i=0;i<queryset.size();i++){
+        //     CSP2Hop(queryset[i].first.first, queryset[i].first.second, queryset[i].second);
+        //     fprintf(fp_ans1, "%f\n", optw);
+        // }
+        // fclose(fp_ans1);
+        // t2=std::chrono::high_resolution_clock::now();
+        // time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
+        // runT= time_span.count();
+        // cspTotalTime+=runT;
+        // cout<<"CSP-2Hop Query Time "<<runT<<endl;
+        // cout << "# of CSP-2Hop Hoplinks " << csp2hopsize <<endl;
+        // cout << "# of CSP-2Hop Path Concatenations " << csp2hoptc <<endl;
 
         FILE *fp_ans2 = fopen((s3+string("QHLans")).c_str(), "w");
         t1=std::chrono::high_resolution_clock::now();
@@ -773,11 +776,16 @@ int main(int argc , char * argv[]){
         t2=std::chrono::high_resolution_clock::now();
         time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
         runT= time_span.count();
+        qhlTotalTime+=runT;
+        cout<<"Query q"<<i<<endl; 
         cout<<"QHL Query Time "<<runT<<endl;
+        cout<<"Query set size "<<queryset.size()<<endl;
+        cout<<"QHL avg Query Time "<<(double)runT/(double)queryset.size()<<"s"<<endl;
         cout << "# of QHL Hoplinks " << qhlhopsize <<endl;
         cout << "# of QHL Path Concatenations " << qhltc <<endl;
         cout << "# hit Pruning Conditions " << hitpc << "in " << totvisitpcs <<endl;
     }
+    cout<<"All q0-5, QHL total time="<<qhlTotalTime<<"s, total queries "<<totalQCount<<", avg. "<<(double)qhlTotalTime/(double)totalQCount<<"s"<<endl;
     for (int i = 0; i < 5;i++){
         totvisitpcs = hitpc = qhlhopsize = csp2hopsize = qhltc = csp2hoptc = 0;
         string s3 = string("../data/") + s + string("/") + string("r") + to_string(i+1);
@@ -788,19 +796,19 @@ int main(int argc , char * argv[]){
         while (~fscanf(fp_query, "%d%d%lf", &qs, &qt, &qC)){
             queryset.push_back(make_pair(II(qs, qt), qC));
         }
-        FILE *fp_ans1 = fopen((s3+string("CSP2Hopans")).c_str(), "w");
-        t1=std::chrono::high_resolution_clock::now();
-        for(int i=0;i<queryset.size();i++){
-            CSP2Hop(queryset[i].first.first, queryset[i].first.second, queryset[i].second);
-            fprintf(fp_ans1, "%f\n", optw);
-        }
-        fclose(fp_ans1);
-        t2=std::chrono::high_resolution_clock::now();
-        time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
-        runT= time_span.count();
-        cout<<"CSP-2Hop Query Time "<<runT<<endl;
-        cout << "# of CSP-2Hop Hoplinks " << csp2hopsize <<endl;
-        cout << "# of CSP-2Hop Path Concatenations " << csp2hoptc <<endl;
+        // FILE *fp_ans1 = fopen((s3+string("CSP2Hopans")).c_str(), "w");
+        // t1=std::chrono::high_resolution_clock::now();
+        // for(int i=0;i<queryset.size();i++){
+        //     CSP2Hop(queryset[i].first.first, queryset[i].first.second, queryset[i].second);
+        //     fprintf(fp_ans1, "%f\n", optw);
+        // }
+        // fclose(fp_ans1);
+        // t2=std::chrono::high_resolution_clock::now();
+        // time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
+        // runT= time_span.count();
+        // cout<<"CSP-2Hop Query Time "<<runT<<endl;
+        // cout << "# of CSP-2Hop Hoplinks " << csp2hopsize <<endl;
+        // cout << "# of CSP-2Hop Path Concatenations " << csp2hoptc <<endl;
 
         FILE *fp_ans2 = fopen((s3+string("QHLans")).c_str(), "w");
         t1=std::chrono::high_resolution_clock::now();
@@ -812,7 +820,10 @@ int main(int argc , char * argv[]){
         t2=std::chrono::high_resolution_clock::now();
         time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
         runT= time_span.count();
+        cout<<"Query r"<<i<<endl;
         cout<<"QHL Query Time "<<runT<<endl;
+        cout<<"Query set size "<<queryset.size()<<endl;
+        cout<<"QHL avg Query Time "<<(double)runT/(double)queryset.size()<<"s"<<endl;
         cout << "# of QHL Hoplinks " << qhlhopsize <<endl;
         cout << "# of QHL Path Concatenations " << qhltc <<endl;
         cout << "# hit Pruning Conditions " << hitpc << "in " << totvisitpcs <<endl;
